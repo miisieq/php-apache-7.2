@@ -76,14 +76,14 @@ RUN apt-get install -y zlib1g-dev
 RUN docker-php-ext-install zip
 
 # Install PHP "memcached" extension – http://php.net/manual/en/book.memcached.php
-RUN apt-get install -y libmemcached-dev \
-&& cd /tmp \
-&& git clone https://github.com/php-memcached-dev/php-memcached.git \
-&& cd php-memcached \
-&& phpize \
-&& ./configure \
-&& make \
-&& echo "extension=/tmp/php-memcached/modules/memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
+RUN apt-get -y install libmemcached11 libmemcachedutil2 libmemcached-dev \
+    && cd /usr/local/share \
+    && git clone --branch php7 https://github.com/php-memcached-dev/php-memcached \
+    && cd php-memcached \
+    && phpize \
+    && ./configure \
+    && make \
+    && echo "extension=/usr/local/share/php-memcached/modules/memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
 
 # Cleanup the image
 RUN rm -rf /var/lib/apt/lists/* /tmp/*
